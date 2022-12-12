@@ -1,0 +1,5 @@
+../USER_LIB/Src/USER_Flash.c:8:6:USER_FLASH_ErasePage	32	static
+../USER_LIB/Src/USER_Flash.c:19:6:USER_FLASH_Write	208	dynamic
+../USER_LIB/Src/USER_Flash.c:59:7:USER_FLASH_Read_DoubleWord	40	static
+../USER_LIB/Src/USER_Flash.c:94:6:USER_FLASH_Write_IntType	24	static
+../USER_LIB/Src/USER_Flash.c:125:10:USER_FLASH_Read_IntType	16	static
