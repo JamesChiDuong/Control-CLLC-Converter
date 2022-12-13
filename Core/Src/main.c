@@ -33,7 +33,7 @@
 /*define the syntax */
 #define SETTIMER "TIMER"/**********************************************************The Syntax to modify the information of timer such as Duty, frequency*/
 #define SETADC "ADC"/**************************************************************The Syntax to modify the filter of ADC such as cut off frequency*/
-#define SETADCTIMER "TRIGGERDMIDDLE"/**********************************************The Syntax to control trigger ADC at the middle Timer*/
+#define SETADCTIMER "TRIGGERMIDDLE"/**********************************************The Syntax to control trigger ADC at the middle Timer*/
 #define SETPWMWITHADC "PWMBYSIGNAL"/***********************************************The Syntax to modify the ADC by the PWM*/
 
 /*Define the formular*/
@@ -186,7 +186,7 @@ int main(void)
 		  USER_TIMER_DividedIntoTwoCCR(htim3);
 		  USER_CALLBACK_DeInit();
 #ifdef DEBUG_MAIN
-	sprintf(Tx_Buffer,"\r\n--------SYNTAX:TRIGGERDMIDDLE-------\r\n");
+	sprintf(Tx_Buffer,"\r\n--------SYNTAX:TRIGGERMIDDLE-------\r\n");
 	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_Buffer,strlen(Tx_Buffer),1000);
 #endif
 	  }

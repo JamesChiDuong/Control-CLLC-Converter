@@ -21,9 +21,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   8 .data         000001f0  20000000  0800f3c0  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000400  200001f0  0800f5b0  000201f0  2**2
+  9 .bss          00000420  200001f0  0800f5b0  000201f0  2**2
                   ALLOC
- 10 ._user_heap_stack 00000600  200005f0  0800f5b0  000205f0  2**0
+ 10 ._user_heap_stack 00000600  20000610  0800f5b0  00020610  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  000201f0  2**0
                   CONTENTS, READONLY
@@ -39,9 +39,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_line   00019e21  00000000  00000000  0006b08d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    001148aa  00000000  00000000  00084eae  2**0
+ 18 .debug_str    001148a9  00000000  00000000  00084eae  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  00199758  2**0
+ 19 .comment      00000050  00000000  00000000  00199757  2**0
                   CONTENTS, READONLY
  20 .debug_frame  000074b0  00000000  00000000  001997a8  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -1607,7 +1607,7 @@ int main(void)
 		  USER_CALLBACK_DeInit();
  8001282:	f008 fd8b 	bl	8009d9c <USER_CALLBACK_DeInit>
 #ifdef DEBUG_MAIN
-	sprintf(Tx_Buffer,"\r\n--------SYNTAX:TRIGGERDMIDDLE-------\r\n");
+	sprintf(Tx_Buffer,"\r\n--------SYNTAX:TRIGGERMIDDLE-------\r\n");
  8001286:	4928      	ldr	r1, [pc, #160]	; (8001328 <main+0x2e0>)
  8001288:	481d      	ldr	r0, [pc, #116]	; (8001300 <main+0x2b8>)
  800128a:	f009 fe75 	bl	800af78 <siprintf>
@@ -1657,7 +1657,7 @@ int main(void)
  80012e6:	f008 fd59 	bl	8009d9c <USER_CALLBACK_DeInit>
 	  if((CheckFlagUSART == 1) && (strstr(Rx_Buffer,SETTIMER) !=NULL))
  80012ea:	e6c6      	b.n	800107a <main+0x32>
- 80012ec:	200005be 	.word	0x200005be
+ 80012ec:	200005dc 	.word	0x200005dc
  80012f0:	0800ed08 	.word	0x0800ed08
  80012f4:	200005a8 	.word	0x200005a8
  80012f8:	200004d8 	.word	0x200004d8
@@ -1673,7 +1673,7 @@ int main(void)
  8001320:	0800ee2c 	.word	0x0800ee2c
  8001324:	200003fc 	.word	0x200003fc
  8001328:	0800ee3c 	.word	0x0800ee3c
- 800132c:	200005bd 	.word	0x200005bd
+ 800132c:	200005db 	.word	0x200005db
  8001330:	48000400 	.word	0x48000400
 
 08001334 <SystemClock_Config>:
@@ -4227,7 +4227,7 @@ void *_sbrk(ptrdiff_t incr)
  8002148:	20020000 	.word	0x20020000
  800214c:	00000400 	.word	0x00000400
  8002150:	2000059c 	.word	0x2000059c
- 8002154:	200005f0 	.word	0x200005f0
+ 8002154:	20000610 	.word	0x20000610
 
 08002158 <SystemInit>:
   * @param  None
@@ -4354,7 +4354,7 @@ LoopForever:
   ldr r2, =_sbss
  80021c4:	200001f0 	.word	0x200001f0
   ldr r4, =_ebss
- 80021c8:	200005f0 	.word	0x200005f0
+ 80021c8:	20000610 	.word	0x20000610
 
 080021cc <ADC3_IRQHandler>:
  * @retval : None
@@ -15002,7 +15002,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  8006174:	40022000 	.word	0x40022000
  8006178:	40021000 	.word	0x40021000
  800617c:	04c4b400 	.word	0x04c4b400
- 8006180:	0800ee70 	.word	0x0800ee70
+ 8006180:	0800ee6c 	.word	0x0800ee6c
  8006184:	20000000 	.word	0x20000000
  8006188:	20000004 	.word	0x20000004
 
@@ -15183,7 +15183,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  8006288:	4618      	mov	r0, r3
  800628a:	bd80      	pop	{r7, pc}
  800628c:	40021000 	.word	0x40021000
- 8006290:	0800ee80 	.word	0x0800ee80
+ 8006290:	0800ee7c 	.word	0x0800ee7c
 
 08006294 <HAL_RCC_GetPCLK2Freq>:
   * @note   Each time PCLK2 changes, this function must be called to update the
@@ -15210,7 +15210,7 @@ uint32_t HAL_RCC_GetPCLK2Freq(void)
  80062b4:	4618      	mov	r0, r3
  80062b6:	bd80      	pop	{r7, pc}
  80062b8:	40021000 	.word	0x40021000
- 80062bc:	0800ee80 	.word	0x0800ee80
+ 80062bc:	0800ee7c 	.word	0x0800ee7c
 
 080062c0 <RCC_GetSysClockFreqFromPLLSource>:
 /**
@@ -21359,7 +21359,7 @@ HAL_StatusTypeDef UART_SetConfig(UART_HandleTypeDef *huart)
  80088c6:	bf00      	nop
  80088c8:	40008000 	.word	0x40008000
  80088cc:	00f42400 	.word	0x00f42400
- 80088d0:	0800ee88 	.word	0x0800ee88
+ 80088d0:	0800ee84 	.word	0x0800ee84
       }
       else
       {
@@ -24358,8 +24358,8 @@ static void UARTEx_SetNbDataToProcess(UART_HandleTypeDef *huart)
  8009b00:	f85d 7b04 	ldr.w	r7, [sp], #4
  8009b04:	4770      	bx	lr
  8009b06:	bf00      	nop
- 8009b08:	0800eea0 	.word	0x0800eea0
- 8009b0c:	0800eea8 	.word	0x0800eea8
+ 8009b08:	0800ee9c 	.word	0x0800ee9c
+ 8009b0c:	0800eea4 	.word	0x0800eea4
 
 08009b10 <USER_ADC_ConfigFilter>:
 
@@ -24467,7 +24467,7 @@ float USER_ADC_GetADCFilterValue(uint8_t channelADC)
  8009bda:	46bd      	mov	sp, r7
  8009bdc:	bd80      	pop	{r7, pc}
  8009bde:	bf00      	nop
- 8009be0:	200005c0 	.word	0x200005c0
+ 8009be0:	200005e0 	.word	0x200005e0
  8009be4:	2000000c 	.word	0x2000000c
 
 08009be8 <USER_ADC_handleString>:
@@ -24526,7 +24526,7 @@ COMPONENT_ADCFilter USER_ADC_handleString(char* Buffer)
  8009c5a:	3738      	adds	r7, #56	; 0x38
  8009c5c:	46bd      	mov	sp, r7
  8009c5e:	bd80      	pop	{r7, pc}
- 8009c60:	0800ee68 	.word	0x0800ee68
+ 8009c60:	0800ee64 	.word	0x0800ee64
 
 08009c64 <USER_ADC_GetInforFilter>:
 
@@ -24606,7 +24606,7 @@ void USER_CALLBACK_init(void)
  8009cdc:	200003fc 	.word	0x200003fc
  8009ce0:	200005a4 	.word	0x200005a4
  8009ce4:	20000448 	.word	0x20000448
- 8009ce8:	200005c0 	.word	0x200005c0
+ 8009ce8:	200005e0 	.word	0x200005e0
  8009cec:	20000278 	.word	0x20000278
 
 08009cf0 <HAL_UART_RxCpltCallback>:
@@ -24663,10 +24663,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  8009d3c:	bd80      	pop	{r7, pc}
  8009d3e:	bf00      	nop
  8009d40:	40004400 	.word	0x40004400
- 8009d44:	200005bc 	.word	0x200005bc
+ 8009d44:	200005da 	.word	0x200005da
  8009d48:	200005a4 	.word	0x200005a4
  8009d4c:	200005a8 	.word	0x200005a8
- 8009d50:	200005be 	.word	0x200005be
+ 8009d50:	200005dc 	.word	0x200005dc
  8009d54:	20000448 	.word	0x20000448
 
 08009d58 <HAL_ADC_ConvCpltCallback>:
@@ -24710,7 +24710,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
  8009d8a:	f85d 7b04 	ldr.w	r7, [sp], #4
  8009d8e:	4770      	bx	lr
  8009d90:	2000020c 	.word	0x2000020c
- 8009d94:	200005bd 	.word	0x200005bd
+ 8009d94:	200005db 	.word	0x200005db
  8009d98:	20000278 	.word	0x20000278
 
 08009d9c <USER_CALLBACK_DeInit>:
@@ -24748,8 +24748,8 @@ void USER_CALLBACK_DeInit(void)
  8009dd2:	bd80      	pop	{r7, pc}
  8009dd4:	200005a8 	.word	0x200005a8
  8009dd8:	200005a4 	.word	0x200005a4
- 8009ddc:	200005be 	.word	0x200005be
- 8009de0:	200005bd 	.word	0x200005bd
+ 8009ddc:	200005dc 	.word	0x200005dc
+ 8009de0:	200005db 	.word	0x200005db
  8009de4:	00000000 	.word	0x00000000
 
 08009de8 <__USER_FILTER_LowPassFilter>:
@@ -24890,9 +24890,9 @@ float __USER_FILTER_LowPassFilter(float Signal, float CutOffFreq,
  8009f12:	46bd      	mov	sp, r7
  8009f14:	bd80      	pop	{r7, pc}
  8009f16:	bf00      	nop
- 8009f18:	200005cc 	.word	0x200005cc
- 8009f1c:	200005d0 	.word	0x200005d0
- 8009f20:	200005d4 	.word	0x200005d4
+ 8009f18:	200005ec 	.word	0x200005ec
+ 8009f1c:	200005f0 	.word	0x200005f0
+ 8009f20:	200005f4 	.word	0x200005f4
  8009f24:	54442d18 	.word	0x54442d18
  8009f28:	401921fb 	.word	0x401921fb
 
@@ -25096,10 +25096,10 @@ void USER_TIMER_setValueOfPWM(COMPONENT_TIMER TimerVariable)
  800a056:	bd90      	pop	{r4, r7, pc}
  800a058:	200003b0 	.word	0x200003b0
  800a05c:	200003fc 	.word	0x200003fc
- 800a060:	200005d8 	.word	0x200005d8
+ 800a060:	200005f8 	.word	0x200005f8
  800a064:	20000018 	.word	0x20000018
  800a068:	51eb851f 	.word	0x51eb851f
- 800a06c:	200005dc 	.word	0x200005dc
+ 800a06c:	200005fc 	.word	0x200005fc
 
 0800a070 <USER_TIMER_handleString>:
 /*Syntax buffer TIMER-30-20000-2-2(TIMER-dutycycle-tanso-numberoftimer-channel) */
@@ -25190,7 +25190,7 @@ COMPONENT_TIMER USER_TIMER_handleString(char* Buffer)
  800a11a:	46bd      	mov	sp, r7
  800a11c:	bd90      	pop	{r4, r7, pc}
  800a11e:	bf00      	nop
- 800a120:	0800ee6c 	.word	0x0800ee6c
+ 800a120:	0800ee68 	.word	0x0800ee68
 
 0800a124 <USER_TIMER_getValueARR>:
 uint32_t USER_TIMER_getValueARR(void)
@@ -25206,7 +25206,7 @@ uint32_t USER_TIMER_getValueARR(void)
  800a130:	f85d 7b04 	ldr.w	r7, [sp], #4
  800a134:	4770      	bx	lr
  800a136:	bf00      	nop
- 800a138:	200005d8 	.word	0x200005d8
+ 800a138:	200005f8 	.word	0x200005f8
 
 0800a13c <USER_TIMER_getValueCCR>:
 uint32_t USER_TIMER_getValueCCR(void)
@@ -25222,7 +25222,7 @@ uint32_t USER_TIMER_getValueCCR(void)
  800a148:	f85d 7b04 	ldr.w	r7, [sp], #4
  800a14c:	4770      	bx	lr
  800a14e:	bf00      	nop
- 800a150:	200005dc 	.word	0x200005dc
+ 800a150:	200005fc 	.word	0x200005fc
  800a154:	00000000 	.word	0x00000000
 
 0800a158 <USER_TIMER_ConvertADCValueToDutyCycle>:
@@ -25793,11 +25793,11 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800a690:	e7ee      	b.n	800a670 <_printf_float+0x2b8>
  800a692:	bf00      	nop
  800a694:	7fefffff 	.word	0x7fefffff
- 800a698:	0800eeb4 	.word	0x0800eeb4
- 800a69c:	0800eeb8 	.word	0x0800eeb8
- 800a6a0:	0800eec0 	.word	0x0800eec0
- 800a6a4:	0800eebc 	.word	0x0800eebc
- 800a6a8:	0800eec4 	.word	0x0800eec4
+ 800a698:	0800eeb0 	.word	0x0800eeb0
+ 800a69c:	0800eeb4 	.word	0x0800eeb4
+ 800a6a0:	0800eebc 	.word	0x0800eebc
+ 800a6a4:	0800eeb8 	.word	0x0800eeb8
+ 800a6a8:	0800eec0 	.word	0x0800eec0
  800a6ac:	9a0a      	ldr	r2, [sp, #40]	; 0x28
  800a6ae:	6da3      	ldr	r3, [r4, #88]	; 0x58
  800a6b0:	429a      	cmp	r2, r3
@@ -26288,8 +26288,8 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800ab3c:	f104 0619 	add.w	r6, r4, #25
  800ab40:	e7f5      	b.n	800ab2e <_printf_i+0x22e>
  800ab42:	bf00      	nop
- 800ab44:	0800eec6 	.word	0x0800eec6
- 800ab48:	0800eed7 	.word	0x0800eed7
+ 800ab44:	0800eec2 	.word	0x0800eec2
+ 800ab48:	0800eed3 	.word	0x0800eed3
 
 0800ab4c <_scanf_float>:
  800ab4c:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
@@ -26683,7 +26683,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800af5e:	e7c4      	b.n	800aeea <_scanf_float+0x39e>
  800af60:	2500      	movs	r5, #0
  800af62:	e634      	b.n	800abce <_scanf_float+0x82>
- 800af64:	0800eee8 	.word	0x0800eee8
+ 800af64:	0800eee4 	.word	0x0800eee4
  800af68:	0800efef 	.word	0x0800efef
 
 0800af6c <nanf>:
@@ -27044,7 +27044,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800b2b6:	f04f 0c01 	mov.w	ip, #1
  800b2ba:	e7f6      	b.n	800b2aa <_strtod_l+0x28a>
  800b2bc:	0800f1d0 	.word	0x0800f1d0
- 800b2c0:	0800eef0 	.word	0x0800eef0
+ 800b2c0:	0800eeec 	.word	0x0800eeec
  800b2c4:	7ff00000 	.word	0x7ff00000
  800b2c8:	9a17      	ldr	r2, [sp, #92]	; 0x5c
  800b2ca:	1c51      	adds	r1, r2, #1
@@ -27333,9 +27333,9 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800b5aa:	6023      	str	r3, [r4, #0]
  800b5ac:	e786      	b.n	800b4bc <_strtod_l+0x49c>
  800b5ae:	bf00      	nop
- 800b5b0:	0800eec1 	.word	0x0800eec1
- 800b5b4:	0800ef04 	.word	0x0800ef04
- 800b5b8:	0800eeb9 	.word	0x0800eeb9
+ 800b5b0:	0800eebd 	.word	0x0800eebd
+ 800b5b4:	0800ef00 	.word	0x0800ef00
+ 800b5b8:	0800eeb5 	.word	0x0800eeb5
  800b5bc:	0800f0f4 	.word	0x0800f0f4
  800b5c0:	0800efef 	.word	0x0800efef
  800b5c4:	0800f268 	.word	0x0800f268
@@ -28621,7 +28621,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800c2f0:	7ff00000 	.word	0x7ff00000
  800c2f4:	0800f0fa 	.word	0x0800f0fa
  800c2f8:	0800f0f1 	.word	0x0800f0f1
- 800c2fc:	0800eec5 	.word	0x0800eec5
+ 800c2fc:	0800eec1 	.word	0x0800eec1
  800c300:	3ff80000 	.word	0x3ff80000
  800c304:	0800f268 	.word	0x0800f268
  800c308:	0800f159 	.word	0x0800f159
@@ -29533,7 +29533,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800cbe2:	f73f aea8 	bgt.w	800c936 <_dtoa_r+0x91e>
  800cbe6:	e7a9      	b.n	800cb3c <_dtoa_r+0xb24>
  800cbe8:	0800f159 	.word	0x0800f159
- 800cbec:	0800eec4 	.word	0x0800eec4
+ 800cbec:	0800eec0 	.word	0x0800eec0
  800cbf0:	0800f0f1 	.word	0x0800f0f1
 
 0800cbf4 <fiprintf>:
@@ -31329,7 +31329,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800dd72:	e7ca      	b.n	800dd0a <_free_r+0x26>
  800dd74:	b003      	add	sp, #12
  800dd76:	bd30      	pop	{r4, r5, pc}
- 800dd78:	200005e0 	.word	0x200005e0
+ 800dd78:	20000600 	.word	0x20000600
 
 0800dd7c <sbrk_aligned>:
  800dd7c:	b570      	push	{r4, r5, r6, lr}
@@ -31357,7 +31357,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800ddb0:	f04f 34ff 	mov.w	r4, #4294967295
  800ddb4:	4620      	mov	r0, r4
  800ddb6:	bd70      	pop	{r4, r5, r6, pc}
- 800ddb8:	200005e4 	.word	0x200005e4
+ 800ddb8:	20000604 	.word	0x20000604
 
 0800ddbc <_malloc_r>:
  800ddbc:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
@@ -31461,7 +31461,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800de9a:	6025      	str	r5, [r4, #0]
  800de9c:	e7de      	b.n	800de5c <_malloc_r+0xa0>
  800de9e:	bf00      	nop
- 800dea0:	200005e0 	.word	0x200005e0
+ 800dea0:	20000600 	.word	0x20000600
 
 0800dea4 <__ssputs_r>:
  800dea4:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
@@ -32059,7 +32059,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800e436:	b103      	cbz	r3, 800e43a <_sbrk_r+0x1a>
  800e438:	6023      	str	r3, [r4, #0]
  800e43a:	bd38      	pop	{r3, r4, r5, pc}
- 800e43c:	200005ec 	.word	0x200005ec
+ 800e43c:	2000060c 	.word	0x2000060c
 
 0800e440 <strncmp>:
  800e440:	b510      	push	{r4, lr}
@@ -32512,25 +32512,25 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800e818:	4801      	ldr	r0, [pc, #4]	; (800e820 <__sfp_lock_acquire+0x8>)
  800e81a:	f000 b8b3 	b.w	800e984 <__retarget_lock_acquire_recursive>
  800e81e:	bf00      	nop
- 800e820:	200005e9 	.word	0x200005e9
+ 800e820:	20000609 	.word	0x20000609
 
 0800e824 <__sfp_lock_release>:
  800e824:	4801      	ldr	r0, [pc, #4]	; (800e82c <__sfp_lock_release+0x8>)
  800e826:	f000 b8ae 	b.w	800e986 <__retarget_lock_release_recursive>
  800e82a:	bf00      	nop
- 800e82c:	200005e9 	.word	0x200005e9
+ 800e82c:	20000609 	.word	0x20000609
 
 0800e830 <__sinit_lock_acquire>:
  800e830:	4801      	ldr	r0, [pc, #4]	; (800e838 <__sinit_lock_acquire+0x8>)
  800e832:	f000 b8a7 	b.w	800e984 <__retarget_lock_acquire_recursive>
  800e836:	bf00      	nop
- 800e838:	200005ea 	.word	0x200005ea
+ 800e838:	2000060a 	.word	0x2000060a
 
 0800e83c <__sinit_lock_release>:
  800e83c:	4801      	ldr	r0, [pc, #4]	; (800e844 <__sinit_lock_release+0x8>)
  800e83e:	f000 b8a2 	b.w	800e986 <__retarget_lock_release_recursive>
  800e842:	bf00      	nop
- 800e844:	200005ea 	.word	0x200005ea
+ 800e844:	2000060a 	.word	0x2000060a
 
 0800e848 <__sinit>:
  800e848:	b510      	push	{r4, lr}
@@ -32575,7 +32575,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800e8aa:	61a3      	str	r3, [r4, #24]
  800e8ac:	e7d2      	b.n	800e854 <__sinit+0xc>
  800e8ae:	bf00      	nop
- 800e8b0:	0800eeb0 	.word	0x0800eeb0
+ 800e8b0:	0800eeac 	.word	0x0800eeac
  800e8b4:	0800e7e1 	.word	0x0800e7e1
 
 0800e8b8 <__sfp>:
@@ -32630,7 +32630,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800e936:	603b      	str	r3, [r7, #0]
  800e938:	e7ee      	b.n	800e918 <__sfp+0x60>
  800e93a:	bf00      	nop
- 800e93c:	0800eeb0 	.word	0x0800eeb0
+ 800e93c:	0800eeac 	.word	0x0800eeac
  800e940:	ffff0001 	.word	0xffff0001
 
 0800e944 <_fwalk_reent>:
@@ -32784,13 +32784,13 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800ea88:	4801      	ldr	r0, [pc, #4]	; (800ea90 <__malloc_lock+0x8>)
  800ea8a:	f7ff bf7b 	b.w	800e984 <__retarget_lock_acquire_recursive>
  800ea8e:	bf00      	nop
- 800ea90:	200005e8 	.word	0x200005e8
+ 800ea90:	20000608 	.word	0x20000608
 
 0800ea94 <__malloc_unlock>:
  800ea94:	4801      	ldr	r0, [pc, #4]	; (800ea9c <__malloc_unlock+0x8>)
  800ea96:	f7ff bf76 	b.w	800e986 <__retarget_lock_release_recursive>
  800ea9a:	bf00      	nop
- 800ea9c:	200005e8 	.word	0x200005e8
+ 800ea9c:	20000608 	.word	0x20000608
 
 0800eaa0 <_realloc_r>:
  800eaa0:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
@@ -32892,7 +32892,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800eb7a:	6023      	str	r3, [r4, #0]
  800eb7c:	bd38      	pop	{r3, r4, r5, pc}
  800eb7e:	bf00      	nop
- 800eb80:	200005ec 	.word	0x200005ec
+ 800eb80:	2000060c 	.word	0x2000060c
 
 0800eb84 <_getpid_r>:
  800eb84:	f7f3 ba22 	b.w	8001fcc <_getpid>
@@ -32973,7 +32973,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800ec2a:	b103      	cbz	r3, 800ec2e <_write_r+0x1e>
  800ec2c:	6023      	str	r3, [r4, #0]
  800ec2e:	bd38      	pop	{r3, r4, r5, pc}
- 800ec30:	200005ec 	.word	0x200005ec
+ 800ec30:	2000060c 	.word	0x2000060c
 
 0800ec34 <_close_r>:
  800ec34:	b538      	push	{r3, r4, r5, lr}
@@ -32989,7 +32989,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800ec4a:	b103      	cbz	r3, 800ec4e <_close_r+0x1a>
  800ec4c:	6023      	str	r3, [r4, #0]
  800ec4e:	bd38      	pop	{r3, r4, r5, pc}
- 800ec50:	200005ec 	.word	0x200005ec
+ 800ec50:	2000060c 	.word	0x2000060c
 
 0800ec54 <_fstat_r>:
  800ec54:	b538      	push	{r3, r4, r5, lr}
@@ -33007,7 +33007,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800ec6e:	6023      	str	r3, [r4, #0]
  800ec70:	bd38      	pop	{r3, r4, r5, pc}
  800ec72:	bf00      	nop
- 800ec74:	200005ec 	.word	0x200005ec
+ 800ec74:	2000060c 	.word	0x2000060c
 
 0800ec78 <_isatty_r>:
  800ec78:	b538      	push	{r3, r4, r5, lr}
@@ -33023,7 +33023,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800ec8e:	b103      	cbz	r3, 800ec92 <_isatty_r+0x1a>
  800ec90:	6023      	str	r3, [r4, #0]
  800ec92:	bd38      	pop	{r3, r4, r5, pc}
- 800ec94:	200005ec 	.word	0x200005ec
+ 800ec94:	2000060c 	.word	0x2000060c
 
 0800ec98 <_lseek_r>:
  800ec98:	b538      	push	{r3, r4, r5, lr}
@@ -33041,7 +33041,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800ecb2:	b103      	cbz	r3, 800ecb6 <_lseek_r+0x1e>
  800ecb4:	6023      	str	r3, [r4, #0]
  800ecb6:	bd38      	pop	{r3, r4, r5, pc}
- 800ecb8:	200005ec 	.word	0x200005ec
+ 800ecb8:	2000060c 	.word	0x2000060c
 
 0800ecbc <_malloc_usable_size_r>:
  800ecbc:	f851 3c04 	ldr.w	r3, [r1, #-4]
@@ -33068,7 +33068,7 @@ void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
  800ece6:	b103      	cbz	r3, 800ecea <_read_r+0x1e>
  800ece8:	6023      	str	r3, [r4, #0]
  800ecea:	bd38      	pop	{r3, r4, r5, pc}
- 800ecec:	200005ec 	.word	0x200005ec
+ 800ecec:	2000060c 	.word	0x2000060c
 
 0800ecf0 <_init>:
  800ecf0:	b5f8      	push	{r3, r4, r5, r6, r7, lr}

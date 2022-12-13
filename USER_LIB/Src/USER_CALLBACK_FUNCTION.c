@@ -16,7 +16,7 @@ extern TIM_HandleTypeDef htim3;
 extern UART_HandleTypeDef huart2;
 /*Variable */
 char Rx_data[2] ={0};/******************************************************** Rx Data*/
-char Rx_Buffer[20] = {0};/**************************************************** Rx Buffer*/
+char Rx_Buffer[50] = {0};/**************************************************** Rx Buffer*/
 uint8_t count = 0;/*********************************************************** Count Variable to count in to RxBuffer*/
 uint8_t CheckFlagADC = 0;/**************************************************** Flag checking when ADC jump into CallBack Function*/
 uint8_t CheckFlagUSART = 0;/*************************************************** Flag checking when UART jump into CallBack funtion*/
