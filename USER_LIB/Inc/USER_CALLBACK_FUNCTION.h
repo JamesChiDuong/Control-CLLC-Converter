@@ -16,12 +16,6 @@ void USER_CALLBACK_init(void);
   * @note   Parameters of this function
   *          - huart: The type of UART
   */
-void USER_CALLBACK_clearRxBuffer(void);
-/**
-  * @brief  Function to clear RxData
-  * @note   Parameters of this function
-  *          - none
-  */
-void USER_CALLBACK_clearRxData(void);
+void USER_CALLBACK_DeInit(void);
 
 #endif

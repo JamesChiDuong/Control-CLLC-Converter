@@ -27,6 +27,7 @@ void USER_CALLBACK_init(void)
 {
 	  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
 	  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+	  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 //	  HAL_TIM_PWM_Start(&htim15, TIM_CHANNEL_1);
 	 // HAL_TIM_Base_Start_IT(&htim2);
 	//  HAL_ADCEx_Calibration_Start(&hadc1,ADC_SINGLE_ENDED);/******************************* To disable ADC*/
@@ -67,11 +68,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 	}
 }
 
-void USER_CALLBACK_clearRxBuffer(void)
+void USER_CALLBACK_DeInit(void)
 {
 	memset(Rx_Buffer,'\0',strlen(Rx_Buffer));
-}
-void USER_CALLBACK_clearRxData(void)
-{
 	memset(Rx_data,'\0',strlen(Rx_data));
+	CheckFlagUSART = 0;
+	CheckFlagADC = 0;
 }

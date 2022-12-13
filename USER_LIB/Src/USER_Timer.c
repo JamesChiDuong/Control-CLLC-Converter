@@ -100,3 +100,8 @@ float USER_TIMER_ConvertADCValueToDutyCycle(float ADCValue)
 	DutyCycle = (tempValue*100)/3.3;
 	return DutyCycle;
 }
+
+void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
+{
+	timer.Instance->CCR1 = (timer.Instance->CCR2)/2;
+}

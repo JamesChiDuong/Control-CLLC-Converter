@@ -30,12 +30,16 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 #define DEBUG_MAIN
-#define SETTIMER "TIMER"
-#define SETADC "ADC"
-#define SETPWMWITHADC "PWMBYSIGNAL"
+/*define the syntax */
+#define SETTIMER "TIMER"/**********************************************************The Syntax to modify the information of timer such as Duty, frequency*/
+#define SETADC "ADC"/**************************************************************The Syntax to modify the filter of ADC such as cut off frequency*/
+#define SETADCTIMER "TRIGGERDMIDDLE"/**********************************************The Syntax to control trigger ADC at the middle Timer*/
+#define SETPWMWITHADC "PWMBYSIGNAL"/***********************************************The Syntax to modify the ADC by the PWM*/
 
+/*Define the formular*/
 #define ADDRESS_DATA_STORAGE(X) (0x08040000 + (2*1024*X))
-uint32_t Address = 0x0801F800;
+
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -48,7 +52,7 @@ uint32_t Address = 0x0801F800;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc3;
 ADC_HandleTypeDef hadc4;
 DMA_HandleTypeDef hdma_adc3;
@@ -59,10 +63,11 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+uint32_t Address = 0x0801F800;
 COMPONENT_TIMER PWM_Variable;/************************************************* Store some Duty, channel of Timer*/
 COMPONENT_ADCFilter ADCFilter_Variable;/**************************************** Store infor of ADC variable*/
 float ADC_Variable[3] = {0};/*************************************************** ADC Variable to save value of ADC*/
-char Tx_Buffer[100] = {0};/*************************************************** Tx_Buffer to store information debug*/
+char Tx_Buffer[150] = {0};/*************************************************** Tx_Buffer to store information debug*/
 
 uint32_t CNTValue;
 
@@ -76,17 +81,6 @@ extern char Rx_data[2];/******************************************************* 
 extern char Rx_Buffer[20];/**************************************************** The Buffer to store String*/
 extern char CheckFlagADC;
 extern char CheckFlagUSART;
-/**************/
-//float xn1 =0;
-//float yn1 =0;
-//volatile uint32_t counter = 0;
-////struct ADCFilter
-////{
-////	float cutoffFreq; //Hz
-////	float sampleTime; //Hz
-////	float output;
-////}Filter = {100,100000,0};
-//volatile float _random, _sin,random_LPF,signal_LPF;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -105,24 +99,6 @@ static void MX_ADC4_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-//float testSignal(void)
-//{
-//	float cutoffFreq = 5;
-//	float sample = 100000; //hz
-//	float f1 = 2; 	//Hz
-//	float f2 = 50; 	// Hz
-//	static float  x =0;
-//	_sin = 1000*sin(f1*x) + sin(f2*x)*200;
-//	x += 2*M_PI/1000;
-//
-//	/***Apply LPF***/
-//	//signal_LPF = 0.969*yn1 + 0.0155*_sin + 0.0155*xn1;
-////	signal_LPF =
-////	xn1 = random_LPF;
-////	yn1 = signal_LPF;
-//	signal_LPF = LowPassFilter(_sin, cutoffFreq, sample);
-//	return signal_LPF;
-//}
 /* USER CODE END 0 */
 
 /**
@@ -163,60 +139,57 @@ int main(void)
   /* USER CODE BEGIN 2 */
   USER_CALLBACK_init();
 
-  EraseInit.Banks = FLASH_BANK_2;
-  EraseInit.NbPages = 63;
-  EraseInit.Page = 1;
-  EraseInit.TypeErase = FLASH_TYPEERASE_PAGES;
-  USER_FLASH_ErasePage(EraseInit);
-  USER_FLASH_Write_IntType(Address,578437695752307201);
-//  valueOfFlash = USER_FLASH_Read_IntType(ADDRESS_DATA_STORAGE(123));
- // EraseInit.NbPages = 124;
-  USER_FLASH_ErasePage(EraseInit);
-//  USER_FLASH_Write_DoubleType(ADDRESS_DATA_STORAGE(125),5.14);
-//  valueOfFlashDouble = USER_FLASH_Read_double(ADDRESS_DATA_STORAGE(125));
-//  	USER_FLASH_Write_Array(ADDRESS_DATA_STORAGE(127), array_w, 10);
-//  	USER_FLASH_Read_Array(ADDRESS_DATA_STORAGE(127), array_r, 10);
-  USER_FLASH_Write(Address, array_w, 10);
-  memcpy(array_r,USER_FLASH_Read_DoubleWord(ADDRESS_DATA_STORAGE(126)),10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  /*When receive the data from USART2, it will implement here */
+	  /*When receive the data from USART2, it will set value of Timer follow the syntax TIMER-duty-frequency-NumberofTimer-NumberofChannel */
 	  if((CheckFlagUSART == 1) && (strstr(Rx_Buffer,SETTIMER) !=NULL))
 	  {
 		  PWM_Variable = USER_TIMER_handleString(Rx_Buffer);
 		  USER_TIMER_setValueOfPWM(PWM_Variable);
-		  USER_CALLBACK_clearRxBuffer();
-		  USER_CALLBACK_clearRxData();
-		  CheckFlagUSART = 0;
+		  USER_CALLBACK_DeInit();
 #ifdef DEBUG_MAIN
-	sprintf(Tx_Buffer,"The Timer: %u, The Channel: %u, The value of CCR = %lu The value of ARR = %lu\r\n",PWM_Variable.NumberOfTimer,PWM_Variable.Channel,USER_TIMER_getValueCCR(),USER_TIMER_getValueARR());
+	sprintf(Tx_Buffer,"\r\n--------SYNTAX:TIMER-------\r\nThe Timer: %u\r\nThe Channel: %lu\r\nThe value of CCR = %lu\r\nThe value of ARR = %lu\r\n",PWM_Variable.NumberOfTimer,PWM_Variable.Channel,USER_TIMER_getValueCCR(),USER_TIMER_getValueARR());
 	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_Buffer,strlen(Tx_Buffer),1000);
 #endif
 	  }
+	  /*With the syntax here, it will set the information of the filter in ADC like cut off frequency, sampling time*/
 	  else if((CheckFlagUSART == 1) && (strstr(Rx_Buffer,SETADC) !=NULL))
 	  {
 		  ADCFilter_Variable = USER_ADC_handleString(Rx_Buffer);
 		  USER_ADC_ConfigFilter(ADCFilter_Variable);
-		  USER_CALLBACK_clearRxBuffer();
-		  USER_CALLBACK_clearRxData();
-		  CheckFlagUSART = 0;
+		  USER_CALLBACK_DeInit();
 #ifdef DEBUG_MAIN
-	sprintf(Tx_Buffer,"The Cutoff: %f, The sampleFrequency: %f",USER_ADC_GetInforFilter().cutoffFreq,USER_ADC_GetInforFilter().sampleTime);
+	sprintf(Tx_Buffer,"\r\n--------SYNTAX:ADC-------\r\nThe Cutoff: %f\r\nThe sampleFrequency: %f\r\n",USER_ADC_GetInforFilter().cutoffFreq,USER_ADC_GetInforFilter().sampleTime);
 	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_Buffer,strlen(Tx_Buffer),1000);
 #endif
 	  }
+	  /*With the syntax it will modify and value of ADC will be controlled by duty cycle */
 	  else if((CheckFlagUSART == 1) && (strstr(Rx_Buffer,SETPWMWITHADC) !=NULL))
 	  {
 		  PWM_Variable.Duty = USER_TIMER_ConvertADCValueToDutyCycle(ADC_Variable[2]);
 		  PWM_Variable.NumberOfTimer = 2;
 		  PWM_Variable.Channel = 2;
 		  USER_TIMER_setValueOfPWM(PWM_Variable);
+		  USER_CALLBACK_DeInit();
+#ifdef DEBUG_MAIN
+	sprintf(Tx_Buffer,"\r\n--------SYNTAX:PWMBYSIGNAL-------\r\nThe ADV Value: %0.2f\r\nThe Duty Cycle: %.2f",ADC_Variable[2],PWM_Variable.Duty);
+	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_Buffer,strlen(Tx_Buffer),1000);
+#endif
 	  }
-
+	  /*With the syntax, it will trigger ADC at the middle of timer, with channel of timer 3 is 2 and trigger adc by channel 1 of timer 3 */
+	  else if((CheckFlagUSART == 1) && (strstr(Rx_Buffer,SETADCTIMER) !=NULL))
+	  {
+		  USER_TIMER_DividedIntoTwoCCR(htim3);
+		  USER_CALLBACK_DeInit();
+#ifdef DEBUG_MAIN
+	sprintf(Tx_Buffer,"\r\n--------SYNTAX:TRIGGERDMIDDLE-------\r\n");
+	HAL_UART_Transmit(&huart2, (uint8_t*)Tx_Buffer,strlen(Tx_Buffer),1000);
+#endif
+	  }
 //	  /*When the ADC trigger, it will run here */
 	  if(CheckFlagADC == 1)
 	  {
@@ -225,7 +198,8 @@ int main(void)
 		  ADC_Variable[1] = USER_ADC_GetADCFilterValue(5); /*Get value from channel 5*/
 		  ADC_Variable[2] = USER_ADC_GetADCFilterValue(12); /*Get value from channel 12 - PB0*/
 
-		  CheckFlagADC = 0;
+		 // HAL_GPIO_TogglePin(TEST_ADC_GPIO_Port,TEST_ADC_Pin);
+		  USER_CALLBACK_DeInit();
 	  }
 
 	 //testSignal();
@@ -603,7 +577,7 @@ static void MX_TIM3_Init(void)
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 149;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
@@ -719,6 +693,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(TEST_ADC_GPIO_Port, TEST_ADC_Pin, GPIO_PIN_RESET);

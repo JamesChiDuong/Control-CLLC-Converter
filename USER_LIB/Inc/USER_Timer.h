@@ -45,4 +45,10 @@ uint32_t USER_TIMER_getValueCCR(void);
   *          - ADC value
   */
 float USER_TIMER_ConvertADCValueToDutyCycle(float ADCValue);
+/**
+  * @brief  To divied value CCR into 2 it will be served for trigger ADC at the middle square form
+  * @note   Parameters of this function
+  *          - Timer
+  */
+void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer);
 #endif
