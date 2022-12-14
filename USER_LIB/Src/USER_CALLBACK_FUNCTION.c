@@ -36,8 +36,8 @@ void USER_CALLBACK_init(void)
 	  /**** ADC Start 1********/
 	  //HAL_ADC_Start_IT(&hadc1);
 	  /**** ADC 4 Start with DMA*****/
-	  HAL_ADC_Start_DMA(&hadc3,ADCVar,3);
-	  //HAL_ADC_Start(&hadc3);
+	  //HAL_ADC_Start_DMA(&hadc3,ADCVar,3);
+	  HAL_ADC_Start_IT(&hadc3);
 	  // Use HAL_ADC_Start when want to start mesuare ADC
 	  // HAL_ADC_Stop to stop mesuare
 }

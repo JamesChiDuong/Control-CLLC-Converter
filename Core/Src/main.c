@@ -50,8 +50,6 @@ uint32_t Address = 0x0801F800;
 /* Private variables ---------------------------------------------------------*/
  ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc3;
-ADC_HandleTypeDef hadc4;
-DMA_HandleTypeDef hdma_adc3;
 
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
@@ -61,7 +59,7 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 COMPONENT_TIMER PWM_Variable;/************************************************* Store some Duty, channel of Timer*/
 COMPONENT_ADCFilter ADCFilter_Variable;/**************************************** Store infor of ADC variable*/
-float ADC_Variable[3] = {0};/*************************************************** ADC Variable to save value of ADC*/
+uint32_t ADC_Variable[3] = {0};/*************************************************** ADC Variable to save value of ADC*/
 char Tx_Buffer[100] = {0};/*************************************************** Tx_Buffer to store information debug*/
 
 uint32_t CNTValue;
@@ -93,12 +91,10 @@ extern char CheckFlagUSART;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
-static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC3_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART2_UART_Init(void);
-static void MX_ADC4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -154,30 +150,13 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM2_Init();
-  MX_DMA_Init();
   MX_ADC1_Init();
   MX_ADC3_Init();
   MX_TIM3_Init();
   MX_USART2_UART_Init();
-  MX_ADC4_Init();
   /* USER CODE BEGIN 2 */
   USER_CALLBACK_init();
 
-  EraseInit.Banks = FLASH_BANK_2;
-  EraseInit.NbPages = 63;
-  EraseInit.Page = 1;
-  EraseInit.TypeErase = FLASH_TYPEERASE_PAGES;
-  USER_FLASH_ErasePage(EraseInit);
-  USER_FLASH_Write_IntType(Address,578437695752307201);
-//  valueOfFlash = USER_FLASH_Read_IntType(ADDRESS_DATA_STORAGE(123));
- // EraseInit.NbPages = 124;
-  USER_FLASH_ErasePage(EraseInit);
-//  USER_FLASH_Write_DoubleType(ADDRESS_DATA_STORAGE(125),5.14);
-//  valueOfFlashDouble = USER_FLASH_Read_double(ADDRESS_DATA_STORAGE(125));
-//  	USER_FLASH_Write_Array(ADDRESS_DATA_STORAGE(127), array_w, 10);
-//  	USER_FLASH_Read_Array(ADDRESS_DATA_STORAGE(127), array_r, 10);
-  USER_FLASH_Write(Address, array_w, 10);
-  memcpy(array_r,USER_FLASH_Read_DoubleWord(ADDRESS_DATA_STORAGE(126)),10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -221,9 +200,16 @@ int main(void)
 	  if(CheckFlagADC == 1)
 	  {
 		  HAL_GPIO_TogglePin(TEST_ADC_GPIO_Port,TEST_ADC_Pin);
-		  ADC_Variable[0] = USER_ADC_GetADCFilterValue(1); /*Get value from channel 1*/
-		  ADC_Variable[1] = USER_ADC_GetADCFilterValue(5); /*Get value from channel 5*/
-		  ADC_Variable[2] = USER_ADC_GetADCFilterValue(12); /*Get value from channel 12 - PB0*/
+//		  ADC_Variable[0] = USER_ADC_GetADCFilterValue(1); /*Get value from channel 1*/
+//		  ADC_Variable[1] = USER_ADC_GetADCFilterValue(5); /*Get value from channel 5*/
+//		  ADC_Variable[2] = USER_ADC_GetADCFilterValue(12); /*Get value from channel 12 - PB0*/
+		  ADC_Variable[0] = HAL_ADC_GetValue(&hadc3);
+		  ADC_Variable[1] = hadc3.Instance->JDR1;
+		  if((hadc3.Instance->ISR & ADC_ISR_JEOC) == ADC_ISR_JEOC)
+		  {
+
+			  ADC_Variable[1] = hadc3.Instance->JDR2;
+		  }
 
 		  CheckFlagADC = 0;
 	  }
@@ -364,6 +350,7 @@ static void MX_ADC3_Init(void)
 
   ADC_MultiModeTypeDef multimode = {0};
   ADC_ChannelConfTypeDef sConfig = {0};
+  ADC_InjectionConfTypeDef sConfigInjected = {0};
 
   /* USER CODE BEGIN ADC3_Init 1 */
 
@@ -376,15 +363,15 @@ static void MX_ADC3_Init(void)
   hadc3.Init.Resolution = ADC_RESOLUTION_12B;
   hadc3.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc3.Init.GainCompensation = 0;
-  hadc3.Init.ScanConvMode = ADC_SCAN_ENABLE;
+  hadc3.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc3.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc3.Init.LowPowerAutoWait = DISABLE;
-  hadc3.Init.ContinuousConvMode = DISABLE;
-  hadc3.Init.NbrOfConversion = 3;
+  hadc3.Init.ContinuousConvMode = ENABLE;
+  hadc3.Init.NbrOfConversion = 1;
   hadc3.Init.DiscontinuousConvMode = DISABLE;
-  hadc3.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T3_CC1;
-  hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_FALLING;
-  hadc3.Init.DMAContinuousRequests = ENABLE;
+  hadc3.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc3.Init.DMAContinuousRequests = DISABLE;
   hadc3.Init.Overrun = ADC_OVR_DATA_PRESERVED;
   hadc3.Init.OversamplingMode = DISABLE;
   if (HAL_ADC_Init(&hadc3) != HAL_OK)
@@ -404,96 +391,18 @@ static void MX_ADC3_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
   if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_5;
-  sConfig.Rank = ADC_REGULAR_RANK_2;
-  if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_12;
-  sConfig.Rank = ADC_REGULAR_RANK_3;
-  if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN ADC3_Init 2 */
-
-  /* USER CODE END ADC3_Init 2 */
-
-}
-
-/**
-  * @brief ADC4 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_ADC4_Init(void)
-{
-
-  /* USER CODE BEGIN ADC4_Init 0 */
-
-  /* USER CODE END ADC4_Init 0 */
-
-  ADC_ChannelConfTypeDef sConfig = {0};
-  ADC_InjectionConfTypeDef sConfigInjected = {0};
-
-  /* USER CODE BEGIN ADC4_Init 1 */
-
-  /* USER CODE END ADC4_Init 1 */
-
-  /** Common config
-  */
-  hadc4.Instance = ADC4;
-  hadc4.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV4;
-  hadc4.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc4.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc4.Init.GainCompensation = 0;
-  hadc4.Init.ScanConvMode = ADC_SCAN_DISABLE;
-  hadc4.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-  hadc4.Init.LowPowerAutoWait = DISABLE;
-  hadc4.Init.ContinuousConvMode = DISABLE;
-  hadc4.Init.NbrOfConversion = 1;
-  hadc4.Init.DiscontinuousConvMode = DISABLE;
-  hadc4.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc4.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc4.Init.DMAContinuousRequests = DISABLE;
-  hadc4.Init.Overrun = ADC_OVR_DATA_PRESERVED;
-  hadc4.Init.OversamplingMode = DISABLE;
-  if (HAL_ADC_Init(&hadc4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_3;
-  sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
-  sConfig.SingleDiff = ADC_SINGLE_ENDED;
-  sConfig.OffsetNumber = ADC_OFFSET_NONE;
-  sConfig.Offset = 0;
-  if (HAL_ADC_ConfigChannel(&hadc4, &sConfig) != HAL_OK)
   {
     Error_Handler();
   }
 
   /** Configure Injected Channel
   */
-  sConfigInjected.InjectedChannel = ADC_CHANNEL_3;
+  sConfigInjected.InjectedChannel = ADC_CHANNEL_12;
   sConfigInjected.InjectedRank = ADC_INJECTED_RANK_1;
   sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_2CYCLES_5;
   sConfigInjected.InjectedSingleDiff = ADC_SINGLE_ENDED;
@@ -501,22 +410,18 @@ static void MX_ADC4_Init(void)
   sConfigInjected.InjectedOffset = 0;
   sConfigInjected.InjectedNbrOfConversion = 1;
   sConfigInjected.InjectedDiscontinuousConvMode = DISABLE;
-  sConfigInjected.AutoInjectedConv = DISABLE;
+  sConfigInjected.AutoInjectedConv = ENABLE;
   sConfigInjected.QueueInjectedContext = DISABLE;
-  sConfigInjected.ExternalTrigInjecConv = ADC_EXTERNALTRIGINJEC_T3_TRGO;
-  sConfigInjected.ExternalTrigInjecConvEdge = ADC_EXTERNALTRIGINJECCONV_EDGE_RISING;
+  sConfigInjected.ExternalTrigInjecConv = ADC_INJECTED_SOFTWARE_START;
+  sConfigInjected.ExternalTrigInjecConvEdge = ADC_EXTERNALTRIGINJECCONV_EDGE_NONE;
   sConfigInjected.InjecOversamplingMode = DISABLE;
-  if (HAL_ADCEx_InjectedConfigChannel(&hadc4, &sConfigInjected) != HAL_OK)
+  if (HAL_ADCEx_InjectedConfigChannel(&hadc3, &sConfigInjected) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_ADCEx_EnableInjectedQueue(&hadc4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN ADC4_Init 2 */
+  /* USER CODE BEGIN ADC3_Init 2 */
 
-  /* USER CODE END ADC4_Init 2 */
+  /* USER CODE END ADC3_Init 2 */
 
 }
 
@@ -575,7 +480,6 @@ static void MX_TIM2_Init(void)
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
-  HAL_TIM_MspPostInit(&htim2);
 
 }
 
@@ -687,23 +591,6 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE BEGIN USART2_Init 2 */
 
   /* USER CODE END USART2_Init 2 */
-
-}
-
-/**
-  * Enable DMA controller clock
-  */
-static void MX_DMA_Init(void)
-{
-
-  /* DMA controller clock enable */
-  __HAL_RCC_DMAMUX1_CLK_ENABLE();
-  __HAL_RCC_DMA1_CLK_ENABLE();
-
-  /* DMA interrupt init */
-  /* DMA1_Channel1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
 }
 
