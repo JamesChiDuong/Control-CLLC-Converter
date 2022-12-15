@@ -156,7 +156,7 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   USER_CALLBACK_init();
-
+ // SET_BIT(hadc3.Instance->CR,ADC_CR_JADSTART);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -190,7 +190,7 @@ int main(void)
 	  }
 	  else if((CheckFlagUSART == 1) && (strstr(Rx_Buffer,SETPWMWITHADC) !=NULL))
 	  {
-		  PWM_Variable.Duty = USER_TIMER_ConvertADCValueToDutyCycle(ADC_Variable[2]);
+		  PWM_Variable.Duty = USER_TIMER_ConvertADCValueToDutyCycle(ADC_Variable[0]);
 		  PWM_Variable.NumberOfTimer = 2;
 		  PWM_Variable.Channel = 2;
 		  USER_TIMER_setValueOfPWM(PWM_Variable);
@@ -404,18 +404,22 @@ static void MX_ADC3_Init(void)
   */
   sConfigInjected.InjectedChannel = ADC_CHANNEL_12;
   sConfigInjected.InjectedRank = ADC_INJECTED_RANK_1;
-  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfigInjected.InjectedSamplingTime = ADC_SAMPLETIME_640CYCLES_5;
   sConfigInjected.InjectedSingleDiff = ADC_SINGLE_ENDED;
   sConfigInjected.InjectedOffsetNumber = ADC_OFFSET_NONE;
   sConfigInjected.InjectedOffset = 0;
   sConfigInjected.InjectedNbrOfConversion = 1;
-  sConfigInjected.InjectedDiscontinuousConvMode = DISABLE;
-  sConfigInjected.AutoInjectedConv = ENABLE;
-  sConfigInjected.QueueInjectedContext = DISABLE;
-  sConfigInjected.ExternalTrigInjecConv = ADC_INJECTED_SOFTWARE_START;
-  sConfigInjected.ExternalTrigInjecConvEdge = ADC_EXTERNALTRIGINJECCONV_EDGE_NONE;
+  sConfigInjected.InjectedDiscontinuousConvMode = ENABLE;
+  sConfigInjected.AutoInjectedConv = DISABLE;
+  sConfigInjected.QueueInjectedContext = ENABLE;
+  sConfigInjected.ExternalTrigInjecConv = ADC_EXTERNALTRIGINJEC_T3_TRGO;
+  sConfigInjected.ExternalTrigInjecConvEdge = ADC_EXTERNALTRIGINJECCONV_EDGE_RISING;
   sConfigInjected.InjecOversamplingMode = DISABLE;
   if (HAL_ADCEx_InjectedConfigChannel(&hadc3, &sConfigInjected) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_ADCEx_EnableInjectedQueue(&hadc3) != HAL_OK)
   {
     Error_Handler();
   }
