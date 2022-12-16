@@ -4,4 +4,4 @@
 ../USER_LIB/Src/USER_Timer.c:81:10:USER_TIMER_getValueARR	4	static
 ../USER_LIB/Src/USER_Timer.c:85:10:USER_TIMER_getValueCCR	4	static
 ../USER_LIB/Src/USER_Timer.c:95:7:USER_TIMER_ConvertADCValueToDutyCycle	24	static
-../USER_LIB/Src/USER_Timer.c:104:6:USER_TIMER_DividedIntoTwoCCR	8	static
+../USER_LIB/Src/USER_Timer.c:104:6:USER_TIMER_DividedIntoTwoCCR	16	static

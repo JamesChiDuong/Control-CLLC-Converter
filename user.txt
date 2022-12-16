@@ -1,0 +1,11 @@
+Testing processing
+- Change these parameters of timer: Writing following format: TIMER-Duty-Frequency-NumberTimer-NumberChannel
+- Trigger ADC in the middle Timer: Timer 3 channel 2 is PWM, Timer 3 channel 1 is Trigger ADC
+    + Trigger ADC use syntax: MIDDLE => It will change the CCR1 value
+    + When change one of the parameter of Timer 3 => We need to write syntax MIDDLE again
+- Change these parameters ADC:
+    + Use syntax: AD-cutoff-samplingtime
+- Change PWM follow ADC value
+    + Use syntax: PWMBYSIGNAL
+    + Trigger ADC by timer
+    + Change parameter of timer

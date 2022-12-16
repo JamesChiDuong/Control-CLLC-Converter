@@ -101,7 +101,7 @@ float USER_TIMER_ConvertADCValueToDutyCycle(float ADCValue)
 	return DutyCycle;
 }
 
-void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer)
+void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef* timer)
 {
-	timer.Instance->CCR1 = (timer.Instance->CCR2)/2;
+	timer->Instance->CCR1 = (timer->Instance->CCR2)/2;
 }

@@ -6,7 +6,6 @@
  */
 #include <USER_CALLBACK_FUNCTION.h>
 /*Extern Variable*/
-extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc3;
 extern DMA_HandleTypeDef hdma_adc3;
 
@@ -22,7 +21,7 @@ uint8_t CheckFlagADC = 0;/**************************************************** F
 uint8_t CheckFlagUSART = 0;/*************************************************** Flag checking when UART jump into CallBack funtion*/
 uint16_t Voltage_Variable = 0;/*********************************************** Voltage Variable*/
 uint32_t ADCVar[3];
-
+uint8_t checkMode;
 void USER_CALLBACK_init(void)
 {
 	  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
@@ -50,7 +49,12 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		if((Rx_data[0]) == '\r')
 		{
 			count = 0;
+			checkMode = 0;
 			CheckFlagUSART = 1;
+			if(strstr(Rx_Buffer,"PWMBYSIGNAL") != NULL)
+			{
+				checkMode = 1;
+			}
 		}
 		HAL_UART_Receive_IT(&huart2, (uint8_t*)Rx_data,1);
 	}
@@ -58,10 +62,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 /********Conversion complete callback in non-blocking mode***/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
-	if(hadc->Instance == hadc1.Instance)
-	{
-		CheckFlagADC = 1;
-	}
 	if(hadc->Instance == hadc3.Instance)
 	{
 		CheckFlagADC = 1;
@@ -73,5 +73,4 @@ void USER_CALLBACK_DeInit(void)
 	memset(Rx_Buffer,'\0',strlen(Rx_Buffer));
 	memset(Rx_data,'\0',strlen(Rx_data));
 	CheckFlagUSART = 0;
-	CheckFlagADC = 0;
 }

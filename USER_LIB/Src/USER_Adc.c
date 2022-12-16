@@ -13,7 +13,7 @@ COMPONENT_ADCFilter FilterSignal ={50000,100000,0};
 void USER_ADC_ConfigFilter(COMPONENT_ADCFilter FilterSignalConfig)
 {
 	FilterSignal.cutoffFreq = FilterSignalConfig.cutoffFreq;
-	FilterSignalConfig.sampleTime = FilterSignalConfig.sampleTime;
+	FilterSignal.sampleTime = FilterSignalConfig.sampleTime;
 }
 float USER_ADC_GetADCFilterValue(uint8_t channelADC)
 {

@@ -50,5 +50,5 @@ float USER_TIMER_ConvertADCValueToDutyCycle(float ADCValue);
   * @note   Parameters of this function
   *          - Timer
   */
-void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef timer);
+void USER_TIMER_DividedIntoTwoCCR(TIM_HandleTypeDef* timer);
 #endif
